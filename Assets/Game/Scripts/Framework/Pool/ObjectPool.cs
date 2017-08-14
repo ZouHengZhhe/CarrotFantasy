@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
+//总对象池类
 public class ObjectPool:Singleton<ObjectPool>
 {
     public string ResourceDir = "";

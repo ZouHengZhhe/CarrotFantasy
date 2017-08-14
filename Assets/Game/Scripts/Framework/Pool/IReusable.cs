@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+//对象池接口
 public interface IReusable
 {
     //当取出时调用

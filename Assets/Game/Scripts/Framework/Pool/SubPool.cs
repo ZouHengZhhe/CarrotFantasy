@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
+//子对象池类
 public class SubPool
 {
     //预设
