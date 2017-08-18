@@ -1,25 +1,19 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 //用于描述一个关卡地图的状态
 public class Map : MonoBehaviour
 {
     #region 常量
-
     public const int RowCount = 8;   //行数
     public const int ColumnCount = 12; //列数
-
     #endregion
 
     #region 事件
-
-
-
     #endregion
 
     #region 字段
-
     float MapWidth;//地图宽
     float MapHeight;//地图高
 
@@ -29,36 +23,201 @@ public class Map : MonoBehaviour
     List<Tile> m_grid = new List<Tile>(); //格子集合
     List<Tile> m_road = new List<Tile>(); //路径集合
 
-    public bool DrawGizmos = true; //是否绘制网格
+    Level m_level; //关卡数据
 
+    public bool DrawGizmos = true; //是否绘制网格
     #endregion
 
     #region 属性
 
+    public Level Level
+    {
+        get { return m_level; }
+    }
 
+    public string BackgroundImage
+    {
+        set
+        {
+            SpriteRenderer render = transform.Find("Background").GetComponent<SpriteRenderer>();
+            StartCoroutine(Tools.LoadImage(value, render));
+        }
+    }
+
+    public string RoadImage
+    {
+        set
+        {
+            SpriteRenderer render = transform.Find("Road").GetComponent<SpriteRenderer>();
+            StartCoroutine(Tools.LoadImage(value, render));
+        }
+    }
+
+    public List<Tile> Grid
+    {
+        get { return m_grid; }
+    }
+
+    public List<Tile> Road
+    {
+        get { return m_road; }
+    }
+
+    //怪物的寻路路径
+    public Vector3[] Path
+    {
+        get
+        {
+            List<Vector3> m_path = new List<Vector3>();
+            for (int i = 0; i < m_road.Count; i++)
+            {
+                Tile t = m_road[i];
+                Vector3 point = GetPosition(t);
+                m_path.Add(point);
+            }
+            return m_path.ToArray();
+        }
+    }
 
     #endregion
 
     #region 方法
+    public void LoadLevel(Level level)
+    {
+        //清除当前状态
+        Clear();
 
+        //保存
+        this.m_level = level;
 
+        //加载图片
+        this.BackgroundImage = "file://" + Consts.MapDir + "/" + level.Background;
+        this.RoadImage = "file://" + Consts.MapDir + "/" + level.Road;
+
+        //寻路点
+        for (int i = 0; i < level.Path.Count; i++)
+        {
+            Point p = level.Path[i];
+            Tile t = GetTile(p.X, p.Y);
+            m_road.Add(t);
+        }
+
+        //炮塔点
+        for (int i = 0; i < level.Holder.Count; i++)
+        {
+            Point p = level.Holder[i];
+            Tile t = GetTile(p.X, p.Y);
+            t.CanHold = true;
+        }
+    }
+
+    //清除塔位信息
+    public void ClearHolder()
+    {
+        foreach (Tile t in m_grid)
+        {
+            if (t.CanHold)
+                t.CanHold = false;
+        }
+    }
+
+    //清除寻路格子集合
+    public void ClearRoad()
+    {
+        m_road.Clear();
+    }
+
+    //清除所有信息
+    public void Clear()
+    {
+        m_level = null;
+        ClearHolder();
+        ClearRoad();
+    }
 
     #endregion
 
     #region Unity回调
+    //只在运行期起作用
+    void Awake()
+    {
+        //计算地图和格子大小
+        CalculateSize();
+
+        //创建所有的格子
+        for (int i = 0; i < RowCount; i++)
+            for (int j = 0; j < ColumnCount; j++)
+                m_grid.Add(new Tile(j, i));
+    }
+
+    //只在编辑器里起作用
+    void OnDrawGizmos()
+    {
+        if (!DrawGizmos)
+            return;
+
+        //计算地图和格子大小
+        CalculateSize();
+
+        //绘制格子
+        Gizmos.color = Color.green;
+
+        //绘制行
+        for (int row = 0; row <= RowCount; row++)
+        {
+            Vector2 from = new Vector2(-MapWidth / 2, -MapHeight / 2 + row * TileHeight);
+            Vector2 to = new Vector2(-MapWidth / 2 + MapWidth, -MapHeight / 2 + row * TileHeight);
+            Gizmos.DrawLine(from, to);
+        }
+
+        //绘制列
+        for (int col = 0; col <= ColumnCount; col++)
+        {
+            Vector2 from = new Vector2(-MapWidth / 2 + col * TileWidth, MapHeight / 2);
+            Vector2 to = new Vector2(-MapWidth / 2 + col * TileWidth, -MapHeight / 2);
+            Gizmos.DrawLine(from, to);
+        }
 
 
+        foreach (Tile t in m_grid)
+        {
+            if (t.CanHold)
+            {
+                Vector3 pos = GetPosition(t);
+                Gizmos.DrawIcon(pos, "holder.png", true);
+            }
+        }
 
+        Gizmos.color = Color.red;
+        for (int i = 0; i < m_road.Count; i++)
+        {
+            //起点
+            if (i == 0)
+            {
+                Gizmos.DrawIcon(GetPosition(m_road[i]), "start.png", true);
+            }
+
+            //终点
+            if (m_road.Count > 1 && i == m_road.Count - 1)
+            {
+                Gizmos.DrawIcon(GetPosition(m_road[i]), "end.png", true);
+            }
+
+            //红色的连线
+            if (m_road.Count > 1 && i != 0)
+            {
+                Vector3 from = GetPosition(m_road[i - 1]);
+                Vector3 to = GetPosition(m_road[i]);
+                Gizmos.DrawLine(from, to);
+            }
+        }
+    }
     #endregion
 
     #region 事件回调
-
-
-
     #endregion
 
     #region 帮助方法
-
     //计算地图大小，格子大小
     void CalculateSize()
     {
@@ -92,7 +251,7 @@ public class Map : MonoBehaviour
 
         if (index < 0 || index >= m_grid.Count)
             return null;
-
+
         return m_grid[index];
     }
 
@@ -112,7 +271,5 @@ public class Map : MonoBehaviour
         Vector3 worldPos = Camera.main.ViewportToWorldPoint(viewPos);
         return worldPos;
     }
-
     #endregion
-
 }
