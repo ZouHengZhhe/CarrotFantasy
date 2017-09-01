@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-//总对象池类
+//总对象池类(单例，一个单例组件,必须挂到物体上)
 public class ObjectPool:Singleton<ObjectPool>
 {
     public string ResourceDir = "";
 
+    //装所有子对象池的字典
     Dictionary<string, SubPool> m_Pools = new Dictionary<string, SubPool>();
 
     //取对象

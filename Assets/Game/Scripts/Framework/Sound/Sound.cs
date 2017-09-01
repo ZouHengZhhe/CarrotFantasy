@@ -5,8 +5,8 @@ public class Sound : Singleton<Sound>
 {
     public string ResourceDir = "";
 
-    AudioSource m_bgSound;
-    AudioSource m_effectSound;
+    AudioSource m_bgSound;      //背景乐
+    AudioSource m_effectSound;  //音效
 
     //音乐大小
     public float BgVolume

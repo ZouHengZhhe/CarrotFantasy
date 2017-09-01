@@ -9,16 +9,16 @@ public class SubPool
     //预设
     GameObject m_prefab;
 
-    //集合
+    //集合列表（用于装所有生成的预设体）
     List<GameObject> m_objects = new List<GameObject>();
 
-    //名字标识
+    //名字标识(根据所装预制体的名字定义,只读属性)
     public string Name
     {
         get { return m_prefab.name; }
     }
 
-    //构造
+    //构造(构造时确定预制体)
     public SubPool(GameObject prefab)
     {
         this.m_prefab = prefab;
@@ -29,6 +29,7 @@ public class SubPool
     {
         GameObject go = null;
 
+        //看子对象池中是否有多余的对象提取
         foreach (GameObject obj in m_objects)
         {
             if (!obj.activeInHierarchy)
@@ -38,7 +39,7 @@ public class SubPool
             }
         }
 
-        if (go == null)
+        if (go == null) //表示该子对象池中没有多余的对象提取,立即重新生成一个新的预制体
         {
             go = GameObject.Instantiate(m_prefab);
             m_objects.Add(go);

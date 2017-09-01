@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Level>
 <Name>第一关：敌人来袭</Name>
 <Background>bg1.png</Background>
@@ -32,6 +32,7 @@
 <Point X="5" Y="4"/>
 <Point X="6" Y="4"/>
 <Point X="7" Y="4"/>
+<Point X="8" Y="4"/>
 <Point X="9" Y="4"/>
 <Point X="11" Y="4"/>
 <Point X="0" Y="5"/>
