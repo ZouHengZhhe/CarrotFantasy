@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Level>
 <Name>第一关：敌人来袭</Name>
+<CardImage>card0.png</CardImage>
 <Background>bg1.png</Background>
 <Road>road1.png</Road>
 <InitScore>10</InitScore>

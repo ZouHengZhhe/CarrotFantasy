@@ -5,7 +5,7 @@ using System.Text;
 
 internal class EndLevelArgs
 {
-    public int LevelIndex { get; set; }
+    public int LevelID { get; set; }
 
     public bool IsSuccess;//是否成功
 }

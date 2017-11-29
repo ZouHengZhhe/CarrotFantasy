@@ -4,17 +4,17 @@ using System.Collections.Generic;
 public abstract class Controller
 {
     //获取模型
-    protected Model GetModel<T>()
+    protected T GetModel<T>()
         where T : Model
     {
-        return MVC.GetModel<T>();
+        return MVC.GetModel<T>() as T;
     }
 
     //获取视图
-    protected View GetView<T>()
+    protected T GetView<T>()
         where T : View
     {
-        return MVC.GetView<T>();
+        return MVC.GetView<T>() as T;
     }
 
     protected void RegisterModel(Model model)

@@ -212,7 +212,6 @@ public class Map : MonoBehaviour
     //只在编辑器里起作用
     private void OnDrawGizmos()
     {
-        print("a");
         if (!DrawGizmos)
             return;
 

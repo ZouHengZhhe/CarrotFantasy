@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-//MVC框架启动入口
 public abstract class ApplicationBase<T> : Singleton<T>
     where T : MonoBehaviour
 {
@@ -12,9 +10,8 @@ public abstract class ApplicationBase<T> : Singleton<T>
         MVC.RegisterController(eventName, controllerType);
     }
 
-    //执行
-    protected void SendEvent(string eventName, object args = null)
+    protected void SendEvent(string eventName, object data = null)
     {
-        MVC.SendEvent(eventName, null);
+        MVC.SendEvent(eventName, data);
     }
 }

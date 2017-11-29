@@ -4,12 +4,12 @@ using System.Text;
 using UnityEngine;
 
 //总对象池类(单例，一个单例组件,必须挂到物体上)
-public class ObjectPool:Singleton<ObjectPool>
+public class ObjectPool : Singleton<ObjectPool>
 {
     public string ResourceDir = "";
 
     //装所有子对象池的字典
-    Dictionary<string, SubPool> m_Pools = new Dictionary<string, SubPool>();
+    private Dictionary<string, SubPool> m_Pools = new Dictionary<string, SubPool>();
 
     //取对象
     public GameObject Spawn(string name)
@@ -45,7 +45,7 @@ public class ObjectPool:Singleton<ObjectPool>
     }
 
     //创建新子池子
-    void RegisterNew(string name)
+    private void RegisterNew(string name)
     {
         //预设路径
         string path = "";
@@ -59,10 +59,10 @@ public class ObjectPool:Singleton<ObjectPool>
         }
 
         //加载预设
-        GameObject prefab=Resources.Load<GameObject>(path);
+        GameObject prefab = Resources.Load<GameObject>(path);
 
-        //创建子对象池   
-        SubPool pool=new SubPool(prefab);
-        m_Pools.Add(pool.Name,pool);
+        //创建子对象池
+        SubPool pool = new SubPool(prefab);
+        m_Pools.Add(pool.Name, pool);
     }
 }

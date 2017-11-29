@@ -21,9 +21,7 @@ public static class MVC
     {
         //防止重复注册
         if (Views.ContainsKey(view.Name))
-        {
             Views.Remove(view.Name);
-        }
 
         //注册关心的事件
         view.RegisterEvents();
@@ -38,24 +36,24 @@ public static class MVC
     }
 
     //获取
-    public static Model GetModel<T>()
+    public static T GetModel<T>()
         where T : Model
     {
         foreach (Model m in Models.Values)
         {
             if (m is T)
-                return m;
+                return (T)m;
         }
         return null;
     }
 
-    public static View GetView<T>()
+    public static T GetView<T>()
         where T : View
     {
         foreach (View v in Views.Values)
         {
             if (v is T)
-                return v;
+                return (T)v;
         }
         return null;
     }

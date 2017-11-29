@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class SceneArgs
 {
-    public int Level;
+    public int SceneIndex;
 }
